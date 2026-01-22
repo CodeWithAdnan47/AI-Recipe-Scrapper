@@ -1,291 +1,281 @@
-# Internship Project Template
+# Recipe Scraper and Organizer - Project Documentation
 
-This template includes a FastAPI backend with Google Gemini LLM integration and a React frontend with Tailwind CSS.
+## Project Overview
+
+Recipe Scraper and Organizer is a full-stack web application that allows users to browse recipes from a Kaggle dataset and interact with them using RAG (Retrieval-Augmented Generation). Users can view recipes on a dashboard, click on any recipe to see details, and chat with the recipe using AI. If the answer isn't available in the recipe, the system automatically searches the internet using Tavily to provide comprehensive answers.
+
+## Technology Stack
+
+### Frontend
+- React 19
+- Vite (build tool)
+- Tailwind CSS (styling)
+- React Router DOM (routing)
+- Firebase SDK (authentication)
+
+### Backend
+- Python 3.12+
+- FastAPI (REST API)
+- Uvicorn (ASGI server)
+- Pydantic (data validation)
+- Pandas (CSV parsing)
+- SQLite (recipe data storage)
+
+### AI/ML
+- LangChain (RAG implementation)
+- Google Gemini LLM (chat responses)
+- Tavily API (internet search fallback)
+- Vector store (recipe embeddings - in-memory or ChromaDB)
+
+### Authentication
+- Firebase Authentication (email/password)
 
 ## Project Structure
 
 ```
-.
-├── Backend/                    # FastAPI backend application
-│   ├── main.py                 # Main backend server file
-│   ├── pyproject.toml          # Python project configuration
+recipe-scraper-and-organizer/
+├── Backend/
+│   ├── main.py                 # FastAPI application
+│   ├── database/               # Database setup and models
+│   ├── routes/                # API route handlers
+│   ├── services/              # Business logic (RAG, Tavily)
+│   ├── scripts/               # Setup scripts (dataset download)
 │   ├── requirements.txt        # Python dependencies
-│   ├── uv.lock                 # UV lock file for dependency versions
-│   ├── README.md               # Backend-specific documentation
-│   └── .env                    # Environment variables (create this file)
+│   └── .env                    # Environment variables
 │
-└── Frontend/                   # React frontend application
-    ├── public/
-    │   └── vite.svg            # Vite logo
-    ├── src/
-    │   ├── components/
-    │   │   └── QuoteGenerator.jsx  # Quote generator component
-    │   ├── assets/
-    │   │   └── react.svg       # React logo
-    │   ├── App.jsx             # Main app component (layout wrapper)
-    │   ├── App.css             # App-specific styles
-    │   ├── main.jsx            # React entry point
-    │   └── index.css           # Global styles with Tailwind
-    ├── eslint.config.js        # ESLint configuration
-    ├── index.html              # HTML entry point
-    ├── package.json            # Node.js dependencies and scripts
-    ├── package-lock.json       # npm lock file
-    ├── postcss.config.js       # PostCSS configuration
-    ├── tailwind.config.js      # Tailwind CSS configuration
-    ├── vite.config.js          # Vite build tool configuration
-    └── README.md               # Frontend-specific documentation
+├── Frontend/
+│   ├── src/
+│   │   ├── components/        # React components
+│   │   ├── pages/              # Page components
+│   │   ├── services/           # API service functions
+│   │   ├── config/             # Firebase configuration
+│   │   └── App.jsx             # Main app component
+│   ├── package.json            # Node dependencies
+│   └── .env                    # Frontend environment variables
+│
+├── issues/                     # All project issues
+├── project_details.md          # Detailed project plan
+└── PROJECT-README.md           # This file
 ```
 
-## Getting Started
+## Issue Flow
 
-### Clone the Repository
+### Foundation Phase (Issues 1-8)
+1. **Issue #01**: Project Setup - Initialize project structure and dependencies
+2. **Issue #02**: Landing Page UI - Create static landing page
+3. **Issue #03**: Signup Page UI - Create signup form (static)
+4. **Issue #04**: Login Page UI - Create login form (static)
+5. **Issue #05**: Firebase Auth Setup - Configure Firebase project and SDK
+6. **Issue #06**: Integrate Signup with Firebase - Connect signup form to Firebase
+7. **Issue #07**: Integrate Login with Firebase - Connect login form to Firebase
+8. **Issue #08**: Dashboard UI - Create protected dashboard page
 
-First, you need to clone this repository to your local machine. This will download all the project files to your computer.
+### Core Features Phase (Issues 9-12)
+9. **Issue #09**: Dataset Download & Database Setup - Download Kaggle dataset and store in SQLite
+10. **Issue #10**: Display Recipes - Backend API + Frontend integration to show recipes
+11. **Issue #11**: Recipe Detail View - Backend API + Frontend detail page
+12. **Issue #12**: RAG Chat Feature - LangChain RAG + Tavily fallback + Chat UI
 
-**Repository URL:** https://github.com/progressionschool/internship-project-template
+### Final Phase (Issue 13)
+13. **Issue #13**: Final Testing - Complete application flow verification
 
-**On Windows:**
+## API Endpoints
 
-1. Open **Git Bash** (if you have Git installed) or **Command Prompt**
-2. Navigate to the directory where you want to save the project:
-   ```bash
-   cd C:\Users\YourName\Desktop
-   ```
-   (Replace `YourName` with your actual username)
-3. Clone the repository:
-   ```bash
-   git clone https://github.com/progressionschool/internship-project-template.git
-   ```
-4. Navigate into the project directory:
-   ```bash
-   cd internship-project-template
-   ```
+### Authentication
+Authentication is handled entirely by Firebase SDK on the frontend. No backend auth endpoints are required.
 
-**On macOS:**
+### Recipe Endpoints
 
-1. Open **Terminal** (you can find it in Applications > Utilities)
-2. Navigate to the directory where you want to save the project:
-   ```bash
-   cd ~/Desktop
-   ```
-   (Or any other directory you prefer)
-3. Clone the repository:
-   ```bash
-   git clone https://github.com/progressionschool/internship-project-template.git
-   ```
-4. Navigate into the project directory:
-   ```bash
-   cd internship-project-template
-   ```
+| Method | Endpoint | Protected | Purpose | LLM Integration |
+|--------|----------|-----------|---------|-----------------|
+| GET | `/api/recipes` | Yes | Get all recipes | No |
+| GET | `/api/recipes/:id` | Yes | Get single recipe details | No |
+| POST | `/api/recipes/:id/chat` | Yes | Chat with recipe using RAG | Yes (RAG + Tavily) |
 
-**Note:** Make sure you have Git installed on your system. If you don't have Git installed, download it from [git-scm.com](https://git-scm.com/downloads).
+**Note:** All protected endpoints require Firebase authentication token in request headers.
 
-## Prerequisites
+## Pages and Routes
 
-Before you begin, ensure you have the following installed:
+| Page Name | Route | Protected | Purpose | Main Components |
+|-----------|-------|-----------|---------|-----------------|
+| Landing | `/` | No | Welcome page with app info | Navbar, Hero, Features, Footer |
+| Signup | `/signup` | No | User registration | SignupForm |
+| Login | `/login` | No | User authentication | LoginForm |
+| Dashboard | `/dashboard` | Yes | Main user interface with recipe list | Navbar, RecipeList, RecipeCard |
+| Recipe Detail | `/recipes/:id` | Yes | View single recipe and chat | RecipeDetail, IngredientList, InstructionList, ChatInterface |
 
-- **Python 3.12+** - [Download Python](https://www.python.org/downloads/)
-- **UV Package Manager** - Fast Python package installer (see installation below)
-- **Node.js 18+** - [Download Node.js](https://nodejs.org/)
-- **npm** (comes with Node.js) or **yarn**
-- **Google API Key** - Get one from [Google AI Studio](https://makersuite.google.com/app/apikey)
+## Components
 
-## Backend Setup
+### Shared Components
+- **Navbar** - Navigation header with logout functionality
+- **Footer** - Footer with links and information
+- **LoadingSpinner** - Loading indicator
+- **ErrorMessage** - Error display component
 
-### 1. Install UV Package Manager
+### Landing Page Components
+- **Hero** - Hero section with CTA
+- **Features** - Feature showcase section
 
-Install UV using pip:
+### Authentication Components
+- **SignupForm** - Registration form
+- **LoginForm** - Login form
 
-```bash
-pip install uv
+### Dashboard Components
+- **RecipeList** - Display recipes grid/list
+- **RecipeCard** - Single recipe card
+
+### Recipe Detail Components
+- **RecipeDetail** - Full recipe view
+- **IngredientList** - Display ingredients
+- **InstructionList** - Display instructions
+- **ChatInterface** - Chat with recipe
+- **ChatMessage** - Single chat message
+
+## Database Schema
+
+### Recipes Table
+Stores recipe data from Kaggle dataset:
+- Essential fields: identifier, title, ingredients, instructions, servings, prep_time, cook_time, image_url, and other fields from Kaggle dataset
+- Note: Students design exact field names and data types based on Kaggle dataset structure
+- Recipes are public/shared - no per-user ownership needed
+
+### Optional: Chat History Table
+- Purpose: Store chat history for user sessions (optional - can be in-memory)
+- Essential fields: identifier, recipe_id, user_id (Firebase UID), message, response, created_at
+
+## User Flow
+
+1. **First Visit**: User lands on Landing page → Clicks "Sign Up"
+2. **Registration**: Fills signup form → Firebase creates account → Redirects to login
+3. **Login**: Enters credentials → Firebase authenticates → Redirects to Dashboard
+4. **Main Usage**: 
+   - Views dashboard with recipes list
+   - Clicks recipe card to view details
+   - Views ingredients, instructions, and recipe information
+   - Uses chat interface to ask questions about recipe
+   - RAG system answers from recipe context
+   - If answer not in recipe, system uses Tavily to search internet
+   - Receives comprehensive answer
+
+## Key Features
+
+### Recipe Database
+- Access to recipes from Kaggle dataset stored in SQLite
+- Recipes displayed in dashboard grid/list view
+- Detailed recipe view with ingredients and instructions
+
+### Interactive Chat
+- Ask questions about recipes using RAG
+- LangChain creates RAG chain with recipe content as context
+- Vector embeddings for semantic search
+- Context-aware responses based on recipe information
+
+### Internet Fallback
+- Tavily API integration for internet search
+- Automatic fallback when recipe doesn't contain answer
+- Combines recipe context with internet results
+
+## Development Setup
+
+### Prerequisites
+- Python 3.12+
+- UV Package Manager
+- Node.js 18+
+- Google API Key (for Gemini LLM)
+- Firebase project (for authentication)
+- Tavily API key (for internet search)
+- Kaggle API credentials (for dataset download)
+
+### Backend Setup
+1. Navigate to Backend directory
+2. Create virtual environment: `uv venv`
+3. Activate virtual environment
+4. Install dependencies: `uv add -r requirements.txt`
+5. Create `.env` file with:
+   - `GOOGLE_API_KEY=your_api_key`
+   - `TAVILY_API_KEY=your_tavily_key`
+6. Run setup script to download dataset and populate database
+7. Start server: `uvicorn main:app --reload`
+
+### Frontend Setup
+1. Navigate to Frontend directory
+2. Install dependencies: `npm install`
+3. Create `.env` file with Firebase configuration
+4. Start dev server: `npm run dev`
+
+## Architecture Overview
+
+```
+┌─────────────┐
+│   Browser  │
+└──────┬──────┘
+       │
+       │ HTTP Requests
+       │
+┌──────▼─────────────────┐
+│   React Frontend       │
+│   - Firebase Auth      │
+│   - React Router        │
+│   - Components          │
+└──────┬─────────────────┘
+       │
+       │ API Calls
+       │
+┌──────▼─────────────────┐
+│   FastAPI Backend       │
+│   - SQLite Database     │
+│   - LangChain RAG       │
+│   - Tavily Integration   │
+└──────┬─────────────────┘
+       │
+       │
+┌──────▼─────────────────┐
+│   SQLite Database       │
+│   - Recipes Table       │
+└─────────────────────────┘
 ```
 
-For alternative installation methods, see the [UV documentation](https://github.com/astral-sh/uv).
+## Data Flow Examples
 
-### 2. Navigate to Backend Directory
-
-```bash
-cd Backend
+### Display Recipes Flow
+```
+Load Dashboard → RecipeList Component → GET /api/recipes → FastAPI → SQLite Query → Recipe List → Display Cards
 ```
 
-### 3. Create Virtual Environment
-
-Create a virtual environment using UV:
-
-```bash
-uv venv
+### RAG Chat Flow
+```
+Send Message → ChatInterface → POST /api/recipes/:id/chat → FastAPI → RAG Chain (Recipe Context) → If not found: Tavily Search → LLM Response → Display Message
 ```
 
-This will create a `.venv` folder in the Backend directory.
+## Testing Checklist
 
-### 4. Activate Virtual Environment
-
-Activate the virtual environment:
-
-**On Windows:**
-```bash
-.venv\Scripts\activate
-```
-
-**On macOS/Linux:**
-```bash
-source .venv/bin/activate
-```
-
-### 5. Install Dependencies
-
-Install all packages from `requirements.txt`:
-
-```bash
-uv add -r requirements.txt
-```
-
-### 6. Create Environment File
-
-Create a `.env` file in the `Backend` directory:
-
-```bash
-# On macOS/Linux
-touch .env
-
-# On Windows
-type nul > .env
-```
-
-Add your Google API key to the `.env` file:
-
-```
-GOOGLE_API_KEY=your_api_key_here
-```
-
-Replace `your_api_key_here` with your actual Google API key from [Google AI Studio](https://makersuite.google.com/app/apikey).
-
-### 7. Run the Backend Server
-
-```bash
-uvicorn main:app --reload
-```
-
-The backend server will start at: **http://localhost:8000**
-
-- API Documentation: http://localhost:8000/docs
-- Health Check: http://localhost:8000/health
-- Random Quote Endpoint: http://localhost:8000/api/random-quote
-
-## Frontend Setup
-
-### 1. Navigate to Frontend Directory
-
-Open a new terminal window and navigate to the Frontend directory:
-
-```bash
-cd Frontend
-```
-
-### 2. Install Dependencies
-
-```bash
-npm install
-```
-
-### 3. Run the Frontend Development Server
-
-```bash
-npm run dev
-```
-
-The frontend will start at: **http://localhost:5173** (or another port if 5173 is busy)
-
-## Testing the Connection
-
-1. Make sure both servers are running:
-
-   - Backend: http://localhost:8000
-   - Frontend: http://localhost:5173
-
-2. Open your browser and go to: http://localhost:5173
-
-3. Click the "Generate Quote" button
-
-4. You should see a random inspirational quote generated by the AI!
-
-## Available Endpoints
-
-### Backend Endpoints
-
-- `GET /` - Welcome message
-- `GET /health` - Health check endpoint
-- `GET /api/random-quote` - Sample endpoint to connect Frontend and Backend (generates random quote using Gemini LLM)
-
-## Development Commands
-
-### Backend
-
-```bash
-# Run development server with auto-reload
-uvicorn main:app --reload
-
-# Run on specific port
-uvicorn main:app --reload --port 8001
-```
-
-### Frontend
-
-```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Run linter
-npm run lint
-```
-
-## Technologies Used
-
-### Backend
-
-- **FastAPI** - Modern Python web framework
-- **Uvicorn** - ASGI server
-- **Google Generative AI** - Gemini LLM integration
-- **python-dotenv** - Environment variable management
-
-### Frontend
-
-- **React 19** - UI library
-- **Vite** - Build tool and dev server
-- **Tailwind CSS** - Utility-first CSS framework
-- **ESLint** - Code linting
-
-## Next Steps
-
-Once everything is running fine, here are some steps to extend this template:
-
-1. **Create your own backend endpoints**
-
-   - Add new API endpoints in `Backend/main.py`
-   - Use FastAPI decorators like `@app.get()`, `@app.post()`, `@app.put()`, `@app.delete()`
-   - Test your endpoints using the Swagger UI at http://localhost:8000/docs
-
-2. **Integrate new endpoints to the frontend**
-
-   - Create new components in `Frontend/src/components/` folder
-   - Update `Frontend/src/App.jsx` to include your new components
-   - Use `fetch()` or libraries like `axios` to make API calls
-   - Handle loading states and errors appropriately
-   - Update the UI to display the data from your new endpoints
+- [ ] All pages load correctly
+- [ ] Protected routes redirect unauthenticated users
+- [ ] Firebase authentication works (signup, login, logout)
+- [ ] Recipes display correctly on dashboard
+- [ ] Recipe detail page shows complete information
+- [ ] RAG chat provides answers from recipe context
+- [ ] Tavily fallback works when recipe doesn't contain answer
+- [ ] Error states are handled gracefully
+- [ ] Loading states are displayed appropriately
+- [ ] UI is responsive across screen sizes
 
 ## Resources
 
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [React Documentation](https://react.dev/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Google Generative AI Documentation](https://ai.google.dev/docs)
+- [Firebase Authentication](https://firebase.google.com/docs/auth)
+- [LangChain Documentation](https://python.langchain.com/)
+- [Tavily API Documentation](https://docs.tavily.com/)
+- [Kaggle API Documentation](https://www.kaggle.com/docs/api)
 
-## License
+## Notes
 
-This is a template project for educational purposes.
+- This project uses Firebase for authentication (no backend auth logic)
+- SQLite is used for recipe data storage (not for authentication)
+- LangChain is used for RAG implementation with simple vector stores
+- Tavily API provides internet search fallback
+- Students design their own database schemas based on Kaggle dataset structure
+- All issues follow a progressive difficulty pattern
+- Combined frontend+backend issues reduce context switching
