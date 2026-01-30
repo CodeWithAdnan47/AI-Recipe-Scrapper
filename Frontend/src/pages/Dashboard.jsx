@@ -1,18 +1,50 @@
+import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import RecipeList from '../components/RecipeList';
 import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
     const { currentUser } = useAuth();
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     // Placeholder data for UI visualization
     const stats = [
-        { name: 'Saved Recipes', value: '12', icon: '📖' },
-        { name: 'Categories', value: '4', icon: '🏷️' },
-        { name: 'Favorites', value: '3', icon: '❤️' },
+        { name: 'Total Recipes', value: recipes.length || '0', icon: '📖' },
+        { name: 'Categories', value: '1', icon: '🏷️' }, // Placeholder
+        { name: 'Favorites', value: '0', icon: '❤️' }, // Placeholder
     ];
 
-    const recentRecipes = [1, 2, 3]; // Just array to map placeholders
+    useEffect(() => {
+        const fetchRecipes = async () => {
+            try {
+                setLoading(true);
+                const token = currentUser ? await currentUser.getIdToken() : 'mock_token';
+
+                const response = await fetch('/api/recipes', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch recipes');
+                }
+
+                const data = await response.json();
+                setRecipes(data);
+            } catch (err) {
+                console.error("Error fetching recipes:", err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchRecipes();
+    }, [currentUser]);
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -47,33 +79,9 @@ const Dashboard = () => {
                     </div>
 
                     {/* Recipes Section */}
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Recipes</h2>
-                    {recentRecipes.length > 0 ? (
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                            {/* Placeholder Recipe Cards */}
-                            {recentRecipes.map((i) => (
-                                <div key={i} className="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow duration-300">
-                                    <div className="h-48 bg-gray-200 w-full animate-pulse flex items-center justify-center text-gray-400">
-                                        Recipe Image Preview
-                                    </div>
-                                    <div className="p-5">
-                                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
-                                        <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
-                                        <div className="mt-4 flex justify-between items-center">
-                                            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-indigo-600 bg-indigo-200 last:mr-0 mr-1">
-                                                Dinner
-                                            </span>
-                                            <button className="text-indigo-600 hover:text-indigo-900 text-sm font-medium">View</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-12 bg-white rounded-lg shadow">
-                            <p className="text-gray-500">No recipes found. Start adding some!</p>
-                        </div>
-                    )}
+                    <h2 className="text-xl font-bold text-gray-900 mb-4">Recipes Collection</h2>
+
+                    <RecipeList recipes={recipes} loading={loading} error={error} />
                 </div>
             </main>
 
@@ -83,3 +91,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
