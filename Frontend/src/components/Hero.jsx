@@ -1,26 +1,55 @@
-import { Link } from 'react-router-dom';
+import Button from './ui/Button';
 
 const Hero = () => {
     return (
-        <section className="bg-gray-50 pt-20 pb-12 lg:pt-32 lg:pb-24">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
-                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                    <span className="block">Your digital kitchen</span>
-                    <span className="block text-indigo-600">simplified and organized</span>
-                </h1>
-                <p className="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">
-                    Scrape recipes from any website, organize them into collections, and cook with ease. No more cluttered bookmarks or lost notes.
-                </p>
-                <div className="mt-8 flex justify-center gap-4">
-                    <div className="rounded-md shadow">
-                        <Link to="/signup" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg">
-                            Get Started
-                        </Link>
+        <section className="relative overflow-hidden bg-white pt-20 lg:pt-32 pb-16 lg:pb-32">
+            {/* Background decorations */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+                <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary-100/50 rounded-full blur-3xl opacity-60 animate-float"></div>
+                <div className="absolute top-40 -left-20 w-[400px] h-[400px] bg-secondary-100/60 rounded-full blur-3xl opacity-60 animate-float" style={{ animationDelay: '1s' }}></div>
+            </div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div className="animate-slide-up">
+                    <span className="inline-block py-1 px-3 rounded-full bg-primary-50 text-primary-600 text-sm font-semibold mb-6">
+                        Revolutionize your cooking
+                    </span>
+                    <h1 className="text-5xl md:text-7xl font-display font-extrabold text-secondary-900 tracking-tight mb-6 leading-tight">
+                        Your digital kitchen <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-500">
+                            simplified & organized
+                        </span>
+                    </h1>
+                    <p className="mt-4 max-w-2xl text-xl text-secondary-500 mx-auto mb-10 leading-relaxed">
+                        Scrape recipes from any website, organize them into beautiful collections, and cook with ease. No more cluttered bookmarks or lost notes.
+                    </p>
+                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                        <Button
+                            to="/signup"
+                            variant="primary"
+                            size="lg"
+                            className="shadow-xl shadow-primary-500/20 hover:shadow-2xl hover:shadow-primary-500/30 transform hover:-translate-y-1 transition-all"
+                        >
+                            Get Started Free
+                        </Button>
+                        <Button
+                            to="/login"
+                            variant="secondary"
+                            size="lg"
+                            className="hover:bg-white"
+                        >
+                            Log In to Account
+                        </Button>
                     </div>
-                    <div className="rounded-md shadow">
-                        <Link to="/login" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 md:py-4 md:text-lg">
-                            Log In
-                        </Link>
+                </div>
+
+                {/* Optional: Add a visual element/placeholder for hero image/dashboard preview */}
+                <div className="mt-16 relative mx-auto w-full max-w-5xl lg:mt-24 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                    <div className="relative rounded-2xl bg-secondary-900/5 p-2 lg:p-4 ring-1 ring-inset ring-secondary-900/10">
+                        <div className="bg-white rounded-xl shadow-2xl overflow-hidden min-h-[300px] flex items-center justify-center bg-gradient-to-br from-secondary-50 to-white">
+                            <img src="/dashboard-preview.png" alt="App Screenshot" className="w-full rounded-lg" />
+                            <p className="text-secondary-400 font-medium italic">Dashboard Preview Placeholder</p>
+                        </div>
                     </div>
                 </div>
             </div>

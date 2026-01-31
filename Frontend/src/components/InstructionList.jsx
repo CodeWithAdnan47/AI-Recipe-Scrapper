@@ -33,19 +33,21 @@ const InstructionList = ({ instructions }) => {
     parsedInstructions = parsedInstructions.map(i => i.trim()).filter(i => i.length > 0);
 
     if (!parsedInstructions || parsedInstructions.length === 0) {
-        return <p className="text-gray-500 italic">No instructions provided.</p>;
+        return <p className="text-secondary-400 italic">No instructions provided.</p>;
     }
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-            <h3 className="text-xl font-semibold mb-4 text-emerald-600 border-b pb-2">Instructions</h3>
-            <ol className="space-y-4">
+        <div>
+            <h3 className="text-2xl font-display font-bold text-secondary-900 mb-6 border-b border-secondary-100 pb-4">
+                Instructions
+            </h3>
+            <ol className="space-y-8">
                 {parsedInstructions.map((step, index) => (
-                    <li key={index} className="flex">
-                        <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 font-bold mr-4 text-sm">
+                    <li key={index} className="flex group">
+                        <span className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-secondary-50 text-primary-600 font-display font-bold mr-6 text-lg border border-secondary-100 shadow-sm group-hover:bg-primary-50 group-hover:border-primary-200 transition-all duration-300">
                             {index + 1}
                         </span>
-                        <div className="mt-1 text-gray-700 leading-relaxed">
+                        <div className="mt-1.5 text-secondary-700 leading-relaxed text-lg">
                             {step}
                         </div>
                     </li>

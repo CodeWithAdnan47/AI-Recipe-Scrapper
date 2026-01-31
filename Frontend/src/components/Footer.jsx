@@ -2,32 +2,38 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <footer className="bg-gray-800">
+        <footer className="bg-secondary-900 text-secondary-300">
             <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-between items-center">
-                    <div className="mb-8 md:mb-0">
-                        <span className="text-2xl font-bold text-white">Recipe Scraper</span>
-                        <p className="mt-2 text-gray-300 text-sm">Organize your recipes, simplify your cooking.</p>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div className="col-span-1 md:col-span-2">
+                        <span className="text-2xl font-display font-bold text-white">Recipe Scraper</span>
+                        <p className="mt-4 text-secondary-400 text-sm max-w-sm">
+                            Your personal digital kitchen. Scrape, organize, and cook your favorite recipes with ease.
+                        </p>
                     </div>
-                    <div className="flex space-x-6">
-                        <Link to="#" className="text-gray-400 hover:text-white">
-                            About
-                        </Link>
-                        <Link to="#" className="text-gray-400 hover:text-white">
-                            Privacy Policy
-                        </Link>
-                        <Link to="#" className="text-gray-400 hover:text-white">
-                            Terms of Service
-                        </Link>
-                        <Link to="#" className="text-gray-400 hover:text-white">
-                            Contact
-                        </Link>
+                    <div>
+                        <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Product</h3>
+                        <ul className="space-y-3">
+                            <li><Link to="#" className="hover:text-white transition-colors">Features</Link></li>
+                            <li><Link to="#" className="hover:text-white transition-colors">Pricing</Link></li>
+                            <li><Link to="#" className="hover:text-white transition-colors">FAQ</Link></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Legal</h3>
+                        <ul className="space-y-3">
+                            <li><Link to="#" className="text-sm hover:text-white transition-colors">Privacy Policy</Link></li>
+                            <li><Link to="#" className="text-sm hover:text-white transition-colors">Terms of Service</Link></li>
+                        </ul>
                     </div>
                 </div>
-                <div className="mt-8 border-t border-gray-700 pt-8 md:flex md:items-center md:justify-between">
-                    <p className="mt-8 text-base text-gray-400 md:mt-0 md:order-1">
-                        &copy; 2025 Recipe Scraper and Organizer. All rights reserved.
+                <div className="mt-12 border-t border-secondary-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                    <p className="text-sm text-secondary-500">
+                        &copy; 2025 Recipe Scraper. All rights reserved.
                     </p>
+                    <div className="flex space-x-6 mt-4 md:mt-0">
+                        {/* Social icons could go here */}
+                    </div>
                 </div>
             </div>
         </footer>

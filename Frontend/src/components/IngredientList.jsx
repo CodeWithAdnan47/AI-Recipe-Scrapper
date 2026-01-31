@@ -35,17 +35,21 @@ const IngredientList = ({ ingredients }) => {
 
 
     if (!parsedIngredients || parsedIngredients.length === 0) {
-        return <p className="text-gray-500 italic">No ingredients listed.</p>;
+        return <p className="text-secondary-400 italic">No ingredients listed.</p>;
     }
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-            <h3 className="text-xl font-semibold mb-4 text-emerald-600 border-b pb-2">Ingredients</h3>
-            <ul className="space-y-2">
+        <div className="h-full">
+            <h3 className="text-2xl font-display font-bold text-secondary-900 mb-6 border-b border-secondary-100 pb-4">
+                Ingredients
+            </h3>
+            <ul className="space-y-4">
                 {parsedIngredients.map((item, index) => (
-                    <li key={index} className="flex items-start text-gray-700">
-                        <span className="inline-block w-2 h-2 mt-2 mr-3 bg-emerald-400 rounded-full flex-shrink-0"></span>
-                        <span>{item}</span>
+                    <li key={index} className="flex items-start group">
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center mr-4 mt-0.5 group-hover:bg-primary-200 transition-colors">
+                            <div className="w-2 h-2 rounded-full bg-primary-600"></div>
+                        </div>
+                        <span className="text-secondary-700 leading-relaxed font-medium">{item}</span>
                     </li>
                 ))}
             </ul>

@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import Card from './ui/Card';
 
 // Inline placeholder when image fails (no external dependency)
 const PLACEHOLDER_IMAGE = "data:image/svg+xml," + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect fill="#e5e7eb" width="300" height="200"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6b7280" font-family="sans-serif" font-size="14">No image</text></svg>'
 );
 
-// Use relative URL so Vite proxy forwards to backend (avoids mixed-content blocking)
 const RecipeCard = ({ recipe, isFavorite, onToggleFavorite }) => {
     const navigate = useNavigate();
     const imageName = recipe?.image_name?.trim?.() || recipe?.imageName?.trim?.();
@@ -25,25 +25,28 @@ const RecipeCard = ({ recipe, isFavorite, onToggleFavorite }) => {
     };
 
     return (
-        <div
+        <Card
+            hover
+            padded={false}
             onClick={handleViewRecipe}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer group relative"
+            className="h-full flex flex-col group"
         >
-            <div className="relative h-48 w-full overflow-hidden bg-gray-200">
+            <div className="relative h-48 w-full overflow-hidden">
                 <img
                     src={imageUrl}
                     alt={recipe.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onError={(e) => { e.target.onerror = null; e.target.src = PLACEHOLDER_IMAGE; }}
+                    loading="lazy"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                <div className="absolute top-2 right-2 flex space-x-2">
-                    {/* Favorite Button */}
+                <div className="absolute top-2 right-2 flex space-x-2 z-10">
                     <button
                         onClick={handleToggleFavorite}
-                        className={`p-2 rounded-full shadow-md transition-all duration-200 ${isFavorite
-                                ? 'bg-red-500 text-white hover:bg-red-600'
-                                : 'bg-white/80 backdrop-blur-sm text-gray-500 hover:bg-white hover:text-red-500'
+                        className={`p-2 rounded-full shadow-lg transition-all duration-200 transform hover:scale-110 ${isFavorite
+                            ? 'bg-red-500 text-white hover:bg-red-600'
+                            : 'bg-white/90 backdrop-blur-sm text-secondary-400 hover:text-red-500 hover:bg-white'
                             }`}
                         title={isFavorite ? "Remove from favorites" : "Add to favorites"}
                     >
@@ -52,33 +55,30 @@ const RecipeCard = ({ recipe, isFavorite, onToggleFavorite }) => {
                         </svg>
                     </button>
 
-                    <div className="bg-yellow-400 text-xs font-bold px-2 py-1 rounded shadow self-center hidden">
-                        New
-                    </div>
+                    {/* Optional New Badge if needed based on recipe data */}
+                    {/* <Badge variant="warning" className="shadow-lg">New</Badge> */}
                 </div>
             </div>
-            <div className="p-4">
-                <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2 min-h-[3.5rem]" title={recipe.title}>
-                    {recipe.title}
-                </h3>
-                <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
-                    <span>By Chef</span>
-                    {/* Placeholder for metadata if available */}
+
+            <div className="p-5 flex-1 flex flex-col">
+                <div className="mb-2">
+                    <h3 className="text-lg font-display font-bold text-secondary-900 line-clamp-2 leading-tight group-hover:text-primary-600 transition-colors" title={recipe.title}>
+                        {recipe.title}
+                    </h3>
                 </div>
-                <p className="text-sm text-gray-500 line-clamp-3 mb-4">
-                    {recipe.cleaned_ingredients ? recipe.cleaned_ingredients.substring(0, 100) + '...' : 'No ingredients preview available.'}
+
+                <p className="text-sm text-secondary-500 line-clamp-3 mb-4 flex-1">
+                    {recipe.cleaned_ingredients ? recipe.cleaned_ingredients.substring(0, 120) + '...' : 'No ingredients preview available.'}
                 </p>
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewRecipe();
-                    }}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition-colors duration-200"
-                >
-                    View Recipe
-                </button>
+
+                <div className="mt-auto pt-4 border-t border-secondary-100 flex items-center justify-between">
+                    <span className="text-xs text-secondary-400 font-medium uppercase tracking-wider">View Recipe</span>
+                    <svg className="w-5 h-5 text-primary-500 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </div>
             </div>
-        </div>
+        </Card>
     );
 };
 
