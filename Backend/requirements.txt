@@ -3,3 +3,7 @@ uvicorn
 google-generativeai
 python-dotenv
 firebase-admin
+langchain
+langchain-google-genai
+langchain-community
+tavily-python

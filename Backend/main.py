@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from database.connection import get_db_connection, init_db
 from models.recipe import Recipe
 from middleware.auth import verify_token
+from pydantic import BaseModel
 
 # Load environment variables from .env file
 load_dotenv()
@@ -23,6 +24,10 @@ if not api_key:
 else:
     genai.configure(api_key=api_key)
     genai_configured = True
+
+class ChatRequest(BaseModel):
+    message: str
+
 
 app = FastAPI(title="Recipe Organizer API", version="0.1.0")
 
@@ -169,14 +174,41 @@ async def get_recipe_image(image_name: str):
     return FileResponse(file_path, media_type="image/jpeg")
 
 
-    return {
-        "recipe_id": r["id"],
-        "title": r["title"],
-        "image_name": image_name,
-        "expected_url": f"http://localhost:8000/images/{image_name}.jpg" if image_name else None,
-        "file_exists": file_path is not None,
-        "resolved_path": file_path,
-    }
+@app.post("/api/recipes/{recipe_id}/chat")
+async def recipe_chat(
+    recipe_id: int,
+    body: ChatRequest,
+    user=Depends(verify_token),
+):
+    """
+    Chat about a recipe using RAG (recipe context) with Tavily fallback when the recipe doesn't contain the answer.
+    Requires Authentication.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT * FROM recipes WHERE id = ?", (recipe_id,))
+        row = cursor.fetchone()
+        if row is None:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+        recipe = dict(row)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    finally:
+        conn.close()
+
+    try:
+        from services.rag_chain import answer_with_rag_or_tavily
+        response_text = answer_with_rag_or_tavily(recipe, body.message)
+        return {"response": response_text}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating chat response: {str(e)}",
+        )
+
 
 @app.get("/api/favorites", response_model=List[int])
 async def get_favorites(

@@ -1,6 +1,6 @@
-
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import ChatInterface from '../components/ChatInterface';
 import IngredientList from '../components/IngredientList';
 import InstructionList from '../components/InstructionList';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +12,8 @@ const RecipeDetail = () => {
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const chatRef = useRef(null);
+    const [showChatToggle, setShowChatToggle] = useState(false);
 
     useEffect(() => {
         const fetchRecipe = async () => {
@@ -46,8 +48,27 @@ const RecipeDetail = () => {
         }
     }, [id, currentUser]);
 
+    // Handle scroll for chat toggle visibility
+    useEffect(() => {
+        const handleScroll = () => {
+            // Show button after scrolling down 300px
+            if (window.scrollY > 300) {
+                setShowChatToggle(true);
+            } else {
+                setShowChatToggle(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const handleBack = () => {
         navigate('/dashboard');
+    };
+
+    const scrollToChat = () => {
+        chatRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     if (loading) {
@@ -75,7 +96,7 @@ const RecipeDetail = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 relative">
             <div className="max-w-4xl mx-auto">
                 <button
                     onClick={handleBack}
@@ -121,7 +142,26 @@ const RecipeDetail = () => {
                         <InstructionList instructions={recipe.instructions} />
                     </div>
                 </div>
+
+                {/* RAG Chat */}
+                <section ref={chatRef} className="mt-8 transition-opacity duration-500">
+                    <ChatInterface recipeId={id} />
+                </section>
             </div>
+
+            {/* AI Chat Toggle / Scroll Button */}
+            {showChatToggle && (
+                <button
+                    onClick={scrollToChat}
+                    className="fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-emerald-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-emerald-700 transition-all duration-10 hover:scale-10 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                    aria-label="Scroll to AI Chat"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                    <span className="font-semibold hidden sm:inline">Ask AI Chef</span>
+                </button>
+            )}
         </div>
     );
 };

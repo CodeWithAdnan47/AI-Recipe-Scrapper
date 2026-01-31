@@ -34,10 +34,11 @@ FastAPI backend with Google Gemini LLM integration.
    uv add -r requirements.txt
    ```
 
-5. Create a `.env` file with your Google API key:
+5. Create a `.env` file with your API keys:
 
    ```
    GOOGLE_API_KEY=your_api_key_here
+   TAVILY_API_KEY=your_tavily_key_here   # Optional; for RAG chat web search fallback
    ```
 
 6. Run the server:
@@ -59,5 +60,6 @@ Once the server is running, visit:
 - `GET /` - Welcome message
 - `GET /health` - Health check
 - `GET /api/random-quote` - Generate random quote using Gemini LLM
+- `POST /api/recipes/{recipe_id}/chat` - RAG chat about a recipe (body: `{ "message": "..." }`); uses recipe context and optional Tavily web search fallback
 
 For detailed setup instructions, see the main [README.md](../README.md) file.

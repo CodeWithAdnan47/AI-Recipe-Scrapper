@@ -8,6 +8,10 @@ dependencies = [
     "fastapi>=0.128.0",
     "firebase-admin>=7.1.0",
     "google-generativeai>=0.8.6",
+    "langchain>=1.2.7",
+    "langchain-community>=0.4.1",
+    "langchain-google-genai>=4.2.0",
     "python-dotenv>=1.2.1",
+    "tavily-python>=0.7.21",
     "uvicorn>=0.40.0",
 ]
