@@ -1,6 +1,6 @@
 import RecipeCard from './RecipeCard';
 
-const RecipeList = ({ recipes, loading, error }) => {
+const RecipeList = ({ recipes, loading, error, favorites, onToggleFavorite }) => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-64">
@@ -44,7 +44,12 @@ const RecipeList = ({ recipes, loading, error }) => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 pb-12">
             {recipes.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
+                <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    isFavorite={favorites?.has(recipe.id)}
+                    onToggleFavorite={onToggleFavorite}
+                />
             ))}
         </div>
     );

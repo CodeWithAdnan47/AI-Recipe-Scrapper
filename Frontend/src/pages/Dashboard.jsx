@@ -7,6 +7,8 @@ import { useAuth } from '../context/AuthContext';
 const Dashboard = () => {
     const { currentUser } = useAuth();
     const [recipes, setRecipes] = useState([]);
+    const [favorites, setFavorites] = useState(new Set());
+    const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -14,37 +16,80 @@ const Dashboard = () => {
     const stats = [
         { name: 'Total Recipes', value: recipes.length || '0', icon: '📖' },
         { name: 'Categories', value: '1', icon: '🏷️' }, // Placeholder
-        { name: 'Favorites', value: '0', icon: '❤️' }, // Placeholder
+        {
+            name: 'Favorites',
+            value: favorites.size.toString(),
+            icon: '❤️',
+            onClick: () => setShowFavoritesOnly(prev => !prev),
+            isActive: showFavoritesOnly,
+            color: 'text-red-500'
+        },
     ];
 
     useEffect(() => {
-        const fetchRecipes = async () => {
+        const fetchData = async () => {
             try {
                 setLoading(true);
-                const token = currentUser ? await currentUser.getIdToken() : 'mock_token';
+                if (!currentUser) return;
 
-                const response = await fetch('/api/recipes', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const token = await currentUser.getIdToken();
+                const headers = { 'Authorization': `Bearer ${token}` };
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch recipes');
+                // Fetch recipes
+                const recipesRes = await fetch('/api/recipes', { headers });
+                if (!recipesRes.ok) throw new Error('Failed to fetch recipes');
+                const recipesData = await recipesRes.json();
+                setRecipes(recipesData);
+
+                // Fetch favorites
+                const favRes = await fetch('/api/favorites', { headers });
+                if (favRes.ok) {
+                    const favData = await favRes.json();
+                    setFavorites(new Set(favData));
                 }
 
-                const data = await response.json();
-                setRecipes(data);
             } catch (err) {
-                console.error("Error fetching recipes:", err);
+                console.error("Error fetching data:", err);
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchRecipes();
+        fetchData();
     }, [currentUser]);
+
+    const handleToggleFavorite = async (recipeId) => {
+        try {
+            // Optimistic update
+            const isFav = favorites.has(recipeId);
+            const newFavorites = new Set(favorites);
+            if (isFav) newFavorites.delete(recipeId);
+            else newFavorites.add(recipeId);
+            setFavorites(newFavorites);
+
+            const token = await currentUser.getIdToken();
+            const response = await fetch(`/api/favorites/${recipeId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                // Revert on error
+                setFavorites(favorites);
+                console.error("Failed to toggle favorite");
+            }
+        } catch (error) {
+            setFavorites(favorites);
+            console.error("Error toggling favorite:", error);
+        }
+    };
+
+    const displayedRecipes = showFavoritesOnly
+        ? recipes.filter(recipe => favorites.has(recipe.id))
+        : recipes;
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -68,8 +113,13 @@ const Dashboard = () => {
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-8">
                         {stats.map((item) => (
-                            <div key={item.name} className="bg-white overflow-hidden shadow rounded-lg flex items-center p-5">
-                                <div className="text-3xl mr-4">{item.icon}</div>
+                            <div
+                                key={item.name}
+                                onClick={item.onClick}
+                                className={`bg-white overflow-hidden shadow rounded-lg flex items-center p-5 transition-all duration-200 ${item.onClick ? 'cursor-pointer hover:shadow-md' : ''
+                                    } ${item.isActive ? 'ring-2 ring-red-500 bg-red-50' : ''}`}
+                            >
+                                <div className={`text-3xl mr-4 ${item.isActive ? 'text-red-500' : ''}`}>{item.icon}</div>
                                 <div>
                                     <div className="text-sm font-medium text-gray-500 truncate">{item.name}</div>
                                     <div className="mt-1 text-3xl font-semibold text-gray-900">{item.value}</div>
@@ -79,9 +129,27 @@ const Dashboard = () => {
                     </div>
 
                     {/* Recipes Section */}
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Recipes Collection</h2>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-bold text-gray-900">
+                            {showFavoritesOnly ? 'Your Favorite Recipes' : 'Recipes Collection'}
+                        </h2>
+                        {showFavoritesOnly && (
+                            <button
+                                onClick={() => setShowFavoritesOnly(false)}
+                                className="text-sm text-blue-600 hover:text-blue-800"
+                            >
+                                Show All Recipes
+                            </button>
+                        )}
+                    </div>
 
-                    <RecipeList recipes={recipes} loading={loading} error={error} />
+                    <RecipeList
+                        recipes={displayedRecipes}
+                        loading={loading}
+                        error={error}
+                        favorites={favorites}
+                        onToggleFavorite={handleToggleFavorite}
+                    />
                 </div>
             </main>
 

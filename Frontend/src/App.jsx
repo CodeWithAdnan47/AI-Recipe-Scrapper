@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
+import RecipeDetail from './pages/RecipeDetail';
 import Signup from './pages/Signup';
 
 function App() {
@@ -18,6 +19,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/recipes/:id"
+          element={
+            <ProtectedRoute>
+              <RecipeDetail />
             </ProtectedRoute>
           }
         />

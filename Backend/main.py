@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-from database.connection import get_db_connection
+from database.connection import get_db_connection, init_db
 from models.recipe import Recipe
 from middleware.auth import verify_token
 
@@ -25,6 +25,21 @@ else:
     genai_configured = True
 
 app = FastAPI(title="Recipe Organizer API", version="0.1.0")
+
+@app.on_event("startup")
+def on_startup():
+    print("DEBUG: Executing init_db on startup...")
+    init_db()
+    print("DEBUG: init_db executed.")
+
+@app.get("/api/debug/fix-db")
+async def debug_fix_db():
+    try:
+        init_db()
+        return {"status": "success", "message": "Database initialized (tables created if missing)."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # Enable CORS (Cross-Origin Resource Sharing) to allow frontend to connect
 # This is necessary because the frontend runs on a different port than the backend
@@ -99,6 +114,30 @@ async def get_recipes(
     finally:
         conn.close()
 
+@app.get("/api/recipes/{recipe_id}", response_model=Recipe)
+async def get_recipe_by_id(
+    recipe_id: int,
+    user = Depends(verify_token)
+):
+    """
+    Fetch a single recipe by its ID.
+    Requires Authentication.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT * FROM recipes WHERE id = ?", (recipe_id,))
+        row = cursor.fetchone()
+        if row is None:
+            raise HTTPException(status_code=404, detail="Recipe not found")
+        return dict(row)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    finally:
+        conn.close()
+
 # Serve recipe images from Backend/images; files must be named {image_name}.jpg to match CSV Image_Name
 IMAGES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "images")
 
@@ -130,19 +169,6 @@ async def get_recipe_image(image_name: str):
     return FileResponse(file_path, media_type="image/jpeg")
 
 
-@app.get("/api/debug/recipe-image")
-async def debug_recipe_image():
-    """Return first recipe's image_name and whether the file exists. No auth. Use to debug image loading."""
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, title, image_name FROM recipes WHERE image_name IS NOT NULL AND image_name != '' LIMIT 1")
-    row = cursor.fetchone()
-    conn.close()
-    if not row:
-        return {"found": False, "message": "No recipe with image_name in DB"}
-    r = dict(row)
-    image_name = (r.get("image_name") or "").strip()
-    file_path = _resolve_image_path(image_name) if image_name else None
     return {
         "recipe_id": r["id"],
         "title": r["title"],
@@ -151,3 +177,61 @@ async def debug_recipe_image():
         "file_exists": file_path is not None,
         "resolved_path": file_path,
     }
+
+@app.get("/api/favorites", response_model=List[int])
+async def get_favorites(
+    user = Depends(verify_token)
+):
+    """
+    Get list of recipe IDs favorited by the current user.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        # Assuming verify_token returns a user dict with 'uid' or similar from Firebase
+        user_id = user.get('uid') 
+        cursor.execute("SELECT recipe_id FROM favorites WHERE user_id = ?", (user_id,))
+        rows = cursor.fetchall()
+        return [row['recipe_id'] for row in rows]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    finally:
+        conn.close()
+
+@app.post("/api/favorites/{recipe_id}")
+async def toggle_favorite(
+    recipe_id: int,
+    user = Depends(verify_token)
+):
+    """
+    Toggle favorite status for a recipe. 
+    Returns {"favorited": boolean}.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        user_id = user.get('uid')
+        
+        # Check if already favorited
+        cursor.execute("SELECT 1 FROM favorites WHERE user_id = ? AND recipe_id = ?", (user_id, recipe_id))
+        exists = cursor.fetchone()
+        
+        if exists:
+            # Remove favorite
+            cursor.execute("DELETE FROM favorites WHERE user_id = ? AND recipe_id = ?", (user_id, recipe_id))
+            favorited = False
+        else:
+            # Add favorite
+            cursor.execute("INSERT INTO favorites (user_id, recipe_id) VALUES (?, ?)", (user_id, recipe_id))
+            favorited = True
+            
+        conn.commit()
+        return {"favorited": favorited}
+    except Exception as e:
+        conn.rollback()
+        print(f"ERROR in toggle_favorite: {e}") # Debug print
+        import traceback
+        traceback.print_exc() # Print full stack trace
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    finally:
+        conn.close()
