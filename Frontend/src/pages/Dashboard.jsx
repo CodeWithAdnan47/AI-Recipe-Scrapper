@@ -15,7 +15,7 @@ const Dashboard = () => {
 
     // Placeholder data for UI visualization
     const stats = [
-        { name: 'Total Recipes', value: recipes.length || '0', icon: '📖', color: 'bg-blue-100 text-blue-600' },
+        { name: 'Total Recipes', value: recipes.length || '0', icon: '📖', color: 'bg-blue-100 text-red-600' },
         //{ name: 'Categories', value: '1', icon: '🏷️', color: 'bg-purple-100 text-purple-600' }, // Placeholder
         {
             name: 'Favorites',
