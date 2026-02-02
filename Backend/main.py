@@ -222,10 +222,13 @@ async def get_favorites(
     cursor = conn.cursor()
     try:
         # Assuming verify_token returns a user dict with 'uid' or similar from Firebase
-        user_id = user.get('uid') 
+        user_id = user.get('uid')
+        print(f"DEBUG: Fetching favorites for User ID: {user_id}")
         cursor.execute("SELECT recipe_id FROM favorites WHERE user_id = ?", (user_id,))
         rows = cursor.fetchall()
-        return [row['recipe_id'] for row in rows]
+        favorites = [row['recipe_id'] for row in rows]
+        print(f"DEBUG: Found favorites: {favorites}")
+        return favorites
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
     finally:
@@ -244,6 +247,7 @@ async def toggle_favorite(
     cursor = conn.cursor()
     try:
         user_id = user.get('uid')
+        print(f"DEBUG: Toggling favorite. User ID: {user_id}, Recipe ID: {recipe_id}")
         
         # Check if already favorited
         cursor.execute("SELECT 1 FROM favorites WHERE user_id = ? AND recipe_id = ?", (user_id, recipe_id))

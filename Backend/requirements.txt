@@ -7,3 +7,4 @@ langchain
 langchain-google-genai
 langchain-community
 tavily-python
+requests

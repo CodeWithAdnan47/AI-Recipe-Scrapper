@@ -165,7 +165,9 @@ dependencies = [
     { name = "langchain" },
     { name = "langchain-community" },
     { name = "langchain-google-genai" },
+    { name = "pyjwt" },
     { name = "python-dotenv" },
+    { name = "requests" },
     { name = "tavily-python" },
     { name = "uvicorn" },
 ]
@@ -178,7 +180,9 @@ requires-dist = [
     { name = "langchain", specifier = ">=1.2.7" },
     { name = "langchain-community", specifier = ">=0.4.1" },
     { name = "langchain-google-genai", specifier = ">=4.2.0" },
+    { name = "pyjwt", specifier = ">=2.11.0" },
     { name = "python-dotenv", specifier = ">=1.2.1" },
+    { name = "requests", specifier = ">=2.32.5" },
     { name = "tavily-python", specifier = ">=0.7.21" },
     { name = "uvicorn", specifier = ">=0.40.0" },
 ]

@@ -11,16 +11,16 @@ const Footer = () => {
                             Your personal digital kitchen. Scrape, organize, and cook your favorite recipes with ease.
                         </p>
                     </div>
-                    <div>
+                    {/* <div>
                         <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Product</h3>
-                        <ul className="space-y-3">
+                          <ul className="space-y-3">
                             <li><Link to="#" className="hover:text-white transition-colors">Features</Link></li>
                             <li><Link to="#" className="hover:text-white transition-colors">Pricing</Link></li>
                             <li><Link to="#" className="hover:text-white transition-colors">FAQ</Link></li>
                         </ul>
-                    </div>
+                    </div>*/}
                     <div>
-                        <h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Legal</h3>
+                        {/*<h3 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Legal</h3>*/}
                         <ul className="space-y-3">
                             <li><Link to="#" className="text-sm hover:text-white transition-colors">Privacy Policy</Link></li>
                             <li><Link to="#" className="text-sm hover:text-white transition-colors">Terms of Service</Link></li>

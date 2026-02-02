@@ -1,6 +1,8 @@
+import { useAuth } from '../context/AuthContext';
 import Button from './ui/Button';
 
 const Hero = () => {
+    const { currentUser } = useAuth();
     return (
         <section className="relative overflow-hidden bg-white pt-20 lg:pt-32 pb-16 lg:pb-32">
             {/* Background decorations */}
@@ -24,34 +26,47 @@ const Hero = () => {
                         Scrape recipes from any website, organize them into beautiful collections, and cook with ease. No more cluttered bookmarks or lost notes.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <Button
-                            to="/signup"
-                            variant="primary"
-                            size="lg"
-                            className="shadow-xl shadow-primary-500/20 hover:shadow-2xl hover:shadow-primary-500/30 transform hover:-translate-y-1 transition-all"
-                        >
-                            Get Started Free
-                        </Button>
-                        <Button
-                            to="/login"
-                            variant="secondary"
-                            size="lg"
-                            className="hover:bg-white"
-                        >
-                            Log In to Account
-                        </Button>
+                        {currentUser ? (
+                            <Button
+                                to="/dashboard"
+                                variant="primary"
+                                size="lg"
+                                className="shadow-xl shadow-primary-500/20 hover:shadow-2xl hover:shadow-primary-500/30 transform hover:-translate-y-1 transition-all"
+                            >
+                                Go To Dashboard
+                            </Button>
+                        ) : (
+                            <>
+                                <Button
+                                    to="/signup"
+                                    variant="primary"
+                                    size="lg"
+                                    className="shadow-xl shadow-primary-500/20 hover:shadow-2xl hover:shadow-primary-500/30 transform hover:-translate-y-1 transition-all"
+                                >
+                                    Get Started Free
+                                </Button>
+                                <Button
+                                    to="/login"
+                                    variant="secondary"
+                                    size="lg"
+                                    className="hover:bg-white"
+                                >
+                                    Log In to Account
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </div>
 
                 {/* Optional: Add a visual element/placeholder for hero image/dashboard preview */}
-                <div className="mt-16 relative mx-auto w-full max-w-5xl lg:mt-24 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                {/*<div className="mt-16 relative mx-auto w-full max-w-5xl lg:mt-24 animate-fade-in" style={{ animationDelay: '0.3s' }}>
                     <div className="relative rounded-2xl bg-secondary-900/5 p-2 lg:p-4 ring-1 ring-inset ring-secondary-900/10">
                         <div className="bg-white rounded-xl shadow-2xl overflow-hidden min-h-[300px] flex items-center justify-center bg-gradient-to-br from-secondary-50 to-white">
                             <img src="/dashboard-preview.png" alt="App Screenshot" className="w-full rounded-lg" />
                             <p className="text-secondary-400 font-medium italic">Dashboard Preview Placeholder</p>
                         </div>
                     </div>
-                </div>
+                </div>*/}
             </div>
         </section>
     );
