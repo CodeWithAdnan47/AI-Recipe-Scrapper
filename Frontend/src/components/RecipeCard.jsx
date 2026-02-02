@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../config';
 import Card from './ui/Card';
 
 // Inline placeholder when image fails (no external dependency)
@@ -10,7 +11,7 @@ const RecipeCard = ({ recipe, isFavorite, onToggleFavorite }) => {
     const navigate = useNavigate();
     const imageName = recipe?.image_name?.trim?.() || recipe?.imageName?.trim?.();
     const imageUrl = imageName
-        ? `/images/${imageName}${imageName.toLowerCase().endsWith(".jpg") ? "" : ".jpg"}`
+        ? `${API_BASE_URL}/images/${imageName}${imageName.toLowerCase().endsWith(".jpg") ? "" : ".jpg"}`
         : PLACEHOLDER_IMAGE;
 
     const handleViewRecipe = () => {

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import API_BASE_URL from '../config';
 import { useAuth } from '../context/AuthContext';
 import ChatMessage from './ChatMessage';
 import Button from './ui/Button';
@@ -31,7 +32,7 @@ const ChatInterface = ({ recipeId }) => {
 
         try {
             const token = await currentUser.getIdToken();
-            const response = await fetch(`/api/recipes/${recipeId}/chat`, {
+            const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

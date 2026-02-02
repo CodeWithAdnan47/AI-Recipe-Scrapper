@@ -3,6 +3,7 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import RecipeList from '../components/RecipeList';
 import Card from '../components/ui/Card';
+import API_BASE_URL from '../config';
 import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
@@ -37,13 +38,13 @@ const Dashboard = () => {
                 const headers = { 'Authorization': `Bearer ${token}` };
 
                 // Fetch recipes
-                const recipesRes = await fetch('/api/recipes', { headers });
+                const recipesRes = await fetch(`${API_BASE_URL}/api/recipes`, { headers });
                 if (!recipesRes.ok) throw new Error('Failed to fetch recipes');
                 const recipesData = await recipesRes.json();
                 setRecipes(recipesData);
 
                 // Fetch favorites
-                const favRes = await fetch('/api/favorites', { headers });
+                const favRes = await fetch(`${API_BASE_URL}/api/favorites`, { headers });
                 if (favRes.ok) {
                     const favData = await favRes.json();
                     setFavorites(new Set(favData));
@@ -70,7 +71,7 @@ const Dashboard = () => {
             setFavorites(newFavorites);
 
             const token = await currentUser.getIdToken();
-            const response = await fetch(`/api/favorites/${recipeId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/favorites/${recipeId}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

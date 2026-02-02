@@ -5,6 +5,7 @@ import IngredientList from '../components/IngredientList';
 import InstructionList from '../components/InstructionList';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
+import API_BASE_URL from '../config';
 import { useAuth } from '../context/AuthContext';
 
 const RecipeDetail = () => {
@@ -23,7 +24,7 @@ const RecipeDetail = () => {
                 if (!currentUser) return;
                 const token = await currentUser.getIdToken();
 
-                const response = await fetch(`/api/recipes/${id}`, {
+                const response = await fetch(`${API_BASE_URL}/api/recipes/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -95,7 +96,7 @@ const RecipeDetail = () => {
 
     const imageName = recipe.image_name?.trim?.() || recipe.imageName?.trim?.();
     const imageUrl = imageName
-        ? `/images/${imageName}${imageName.toLowerCase().endsWith(".jpg") ? "" : ".jpg"}`
+        ? `${API_BASE_URL}/images/${imageName}${imageName.toLowerCase().endsWith(".jpg") ? "" : ".jpg"}`
         : null;
 
     return (

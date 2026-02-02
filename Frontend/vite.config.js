@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': { target: 'http://localhost:8000', changeOrigin: true },
-      '/images': { target: 'http://localhost:8000', changeOrigin: true },
+      '/api': { target: 'https://ai-recipe-scrapper.onrender.com', changeOrigin: true },
+      '/images': { target: 'https://ai-recipe-scrapper.onrender.com', changeOrigin: true },
     },
   },
 })
