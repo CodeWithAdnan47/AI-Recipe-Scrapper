@@ -52,6 +52,7 @@ async def debug_fix_db():
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Vite default port and common React port
+    allow_origin_regex="https://.*\.onrender\.com",  # Allow any Render deployment
     allow_credentials=True,
     allow_methods=["*"],  # Allows all HTTP methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allows all headers
