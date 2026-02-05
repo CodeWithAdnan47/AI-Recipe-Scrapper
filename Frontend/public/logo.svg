@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Circular Background -->
+  <circle cx="50" cy="50" r="48" fill="url(#gradient)" />
+  
+  <!-- Chef Hat Icon -->
+  <path d="M30 65 H70 M30 65 V55 C30 50 35 45 40 50 C40 40 45 30 50 30 C55 30 60 40 60 50 C65 45 70 50 70 55 V65" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M35 65 V70 H65 V65" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- AI Sparkle -->
+  <path d="M75 25 L78 32 L85 35 L78 38 L75 45 L72 38 L65 35 L72 32 Z" fill="#FDE047" />
+  
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F46E5" />
+      <stop offset="1" stop-color="#7C3AED" />
+    </linearGradient>
+  </defs>
+</svg>
