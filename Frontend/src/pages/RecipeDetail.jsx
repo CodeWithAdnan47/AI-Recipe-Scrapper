@@ -142,7 +142,19 @@ const RecipeDetail = () => {
                         {recipe.title}
                     </h1>
                     {/* Placeholder for metadata if available */}
-                    <div className="flex items-center space-x-4 text-white/80 text-sm font-medium">
+                    <div className="flex items-center space-x-4 text-white/80 text-sm font-medium mt-4">
+                        <Button
+                            onClick={scrollToChat}
+                            variant="primary"
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white border-transparent shadow-lg shadow-indigo-900/20"
+                            icon={({ className }) => (
+                                <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                </svg>
+                            )}
+                        >
+                            Ask AI Chef
+                        </Button>
                         {/* <span>20 mins</span>
                         <span>•</span>
                         <span>Easy</span> */}

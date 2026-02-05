@@ -58,8 +58,20 @@ const RecipeCard = ({ recipe, isFavorite, onToggleFavorite }) => {
 
                     {/* Optional New Badge if needed based on recipe data */}
                     {/* <Badge variant="warning" className="shadow-lg">New</Badge> */}
+
+                </div>
+
+                {/* AI Chef Badge - Expandable on Hover */}
+                <div className="absolute top-2 left-2 z-10">
+                    <div className="group flex items-center bg-white/90 backdrop-blur-sm text-indigo-600 rounded-full shadow-lg p-1.5 cursor-help transition-all duration-300 hover:bg-indigo-600 hover:text-white hover:pr-3 border border-white/40">
+                        <span className="text-sm flex items-center justify-center w-5 h-5">✨</span>
+                        <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out text-xs font-bold">
+                            <span className="pl-1">Ask AI Chef</span>
+                        </span>
+                    </div>
                 </div>
             </div>
+
 
             <div className="p-5 flex-1 flex flex-col">
                 <div className="mb-2">
@@ -79,7 +91,7 @@ const RecipeCard = ({ recipe, isFavorite, onToggleFavorite }) => {
                     </svg>
                 </div>
             </div>
-        </Card>
+        </Card >
     );
 };
 
