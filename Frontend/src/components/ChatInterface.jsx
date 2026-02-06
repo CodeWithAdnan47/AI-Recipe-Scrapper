@@ -72,7 +72,7 @@ const ChatInterface = ({ recipeId }) => {
                 {/* Optional: Clear chat button could go here */}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 -mx-6 px-6 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-4 pb-8 space-y-4 -mx-6 px-6 custom-scrollbar">
                 {messages.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-70">
                         <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center">
