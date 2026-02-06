@@ -5,7 +5,7 @@ const ChatMessage = ({ message }) => {
     return (
         <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4 animate-slide-up`}>
             <div
-                className={`max-w-[85%] rounded-2xl px-5 py-3 shadow-sm max-h-[350px] overflow-y-auto custom-scrollbar ${isUser
+                className={`max-w-[85%] rounded-2xl px-5 py-3 shadow-sm ${isUser
                     ? 'bg-primary-600 text-white rounded-tr-sm'
                     : 'bg-white border border-secondary-100 text-secondary-800 rounded-tl-sm'
                     }`}

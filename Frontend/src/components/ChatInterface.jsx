@@ -59,7 +59,7 @@ const ChatInterface = ({ recipeId }) => {
     };
 
     return (
-        <Card className="flex flex-col h-[500px] shadow-xl shadow-primary-900/5">
+        <Card className="flex flex-col min-h-[500px] shadow-xl shadow-primary-900/5">
             <div className="border-b border-secondary-100 bg-secondary-50 p-4 -mx-6 -mt-6 mb-0 rounded-t-xl flex items-center justify-between">
                 <div>
                     <h2 className="text-lg font-display font-bold text-secondary-900 flex items-center gap-2">
@@ -72,7 +72,7 @@ const ChatInterface = ({ recipeId }) => {
                 {/* Optional: Clear chat button could go here */}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 pb-8 space-y-4 -mx-6 px-6 custom-scrollbar">
+            <div className="flex-1 p-4 pb-8 space-y-4 -mx-6 px-6">
                 {messages.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-70">
                         <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center">
