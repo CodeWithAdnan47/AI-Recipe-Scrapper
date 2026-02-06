@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Button from './ui/Button';
 import Card from './ui/Card';
@@ -96,17 +96,22 @@ const LoginForm = () => {
                     placeholder="••••••••"
                 />
 
-                <div className="flex items-center justify-between">
-                    {/* Optional: Add 'Remember me' and 'Forgot password' here if needed later */}
+                <div className="flex items-center justify-end">
+                    <Link
+                        to="/forgot-password"
+                        className="text-sm font-medium text-primary-600 hover:text-primary-500 transition-colors duration-200"
+                    >
+                        Forgot password?
+                    </Link>
                 </div>
 
                 <Button
                     type="submit"
                     variant="primary"
-                    className="w-full"
+                    className="w-full py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 font-bold tracking-wide"
                     isLoading={loading}
                 >
-                    Log in
+                    Sign in
                 </Button>
             </form>
 
